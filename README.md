@@ -6,16 +6,140 @@ Query Performance Prediction (QPP) as an unsupervised baseline for
 conversational turn ambiguity classification.
 
 **Hypothesis**: ambiguous queries have lower QPP scores because they are
-harder to satisfy with retrieved information — the retrieval signal is
+harder to satisfy with retrieved information. The retrieval signal is
 weaker, term specificity is lower, and the retrieved documents are less
 coherent.
 
-This baseline requires **no training** — it computes statistical features
+This baseline requires **no training**. It computes statistical features
 from query text and a pseudo-collection built from observation fields,
 then thresholds to classify.
 
 ---
 
+## Usage
+
+### Basic evaluation 
+
+```bash
+python scripts/qpp_evaluate.py \
+    --benchmark pacific \
+    --num_classes 2 \
+    --score_key avg_idf \
+    --threshold_method best_f1
+```
+
+This computes all Tier 1+2 measures for every system turn, finds the
+optimal threshold on the train set, applies it to the test set, and
+reports the same metrics as the BiLSTM-CRF baseline.
+
+### With mock ranked list (enables POST-RETRIEVAL)
+
+```bash
+python scripts/qpp_evaluate.py \
+    --benchmark pacific \
+    --mock_ranked_list \
+    --n_irrelevant 10 \
+    --score_key nqc \
+    --threshold_method best_f1
+```
+
+For each turn, builds a ranked list by BM25-scoring the turn's observations
+(relevant) plus 10 random observations from other conversations
+(irrelevant).  This enables WIG, NQC, SMV, sigma_max, n_sigma, clarity.
+
+### With T5 query rewriter
+
+```bash
+python scripts/qpp_evaluate.py \
+    --benchmark pacific \
+    --rewriter_path /models/t5-query-rewriter \
+    --score_key scs
+```
+
+Rewrites the query using a local T5 model before computing QPP features.
+## Example: per_turn = false:
+### Dataset: CLaQuA (last-turn only)
+
+```bash
+python scripts/qpp_evaluate.py \
+    --benchmark claqua \
+    --per_turn false \
+    --score_key scs \
+    --threshold_method otsu
+```
+
+## Example: Retrieval Augmented Generation (RAG) Conversation Assistant:
+### With pyserini index (if available)
+
+```bash
+python scripts/qpp_evaluate.py \
+    --benchmark pacific \
+    --index_path /path/to/lucene/index \
+    --score_key nqc
+```
+---
+
+## Output format
+
+Results are saved as JSON matching the BiLSTM-CRF evaluation format:
+
+```json
+{
+  "benchmark": "pacific",
+  "score_key": "avg_idf",
+  "threshold_method": "best_f1",
+  "threshold_used": 3.14,
+  "metrics": {
+    "accuracy": 0.72,
+    "precision": 0.68,
+    "recall": 0.71,
+    "f1": 0.69,
+    "auc_roc": 0.74
+  },
+  "per_measure_sweep": {
+    "avg_idf":  {"f1_weighted": 0.69, "f1_macro": 0.58, ...},
+    "scs":      {"f1_weighted": 0.71, "f1_macro": 0.60, ...},
+    "nqc":      {"f1_weighted": 0.65, "f1_macro": 0.55, ...}
+  }
+}
+```
+
+Per-turn diagnostics are saved separately with all QPP features:
+
+```json
+{
+  "turn_index": 3,
+  "query": "What is the interest rate for...",
+  "prediction": 1,
+  "prediction_label": "ambiguous",
+  "ground_truth": 1,
+  "ground_truth_label": "ambiguous",
+  "correct": true,
+  "qpp_score": 2.31,
+  "qpp_features": {
+    "query_length": 6.0,
+    "avg_idf": 2.31,
+    "scs": 4.52,
+    "wig": 1.23,
+    "nqc": 0.87
+  }
+}
+```
+
+---
+
+## Function reference
+
+| Function / Class | File | Purpose |
+|---|---|---|
+| `PseudoCollection` | qpp_measures.py | Indexes observation texts. Provides `idf(t)`, `collection_prob(t)`, `scq(t)`, `bm25_score()`, `get_random_doc()`. |
+| `QPPScorer` | qpp_measures.py | Computes all QPP features for a query. `score_turn()` returns a dict of all applicable measures. |
+| `parse_sip_for_qpp()` | qpp_measures.py | Parses SIP conversation into per-turn records with query, observations, and label separated. |
+| `threshold_classify()` | qpp_measures.py | Converts QPP score array to binary predictions via percentile, fixed, or Otsu thresholding. |
+| `find_best_threshold()` | qpp_measures.py | Grid-searches for the threshold maximizing macro-F1 on labeled data. |
+| `qpp_evaluate.py` | scripts/ | End-to-end evaluation script. Builds collection, scores all turns, thresholds, evaluates, sweeps all measures. |
+
+---
 ## How it works
 
 ```
@@ -156,70 +280,6 @@ top-k documents via Dirichlet smoothing) and collection model.
 
 ---
 
-## Usage
-
-### Basic evaluation 
-
-```bash
-python scripts/qpp_evaluate.py \
-    --benchmark pacific \
-    --num_classes 2 \
-    --score_key avg_idf \
-    --threshold_method best_f1
-```
-
-This computes all Tier 1+2 measures for every system turn, finds the
-optimal threshold on the train set, applies it to the test set, and
-reports the same metrics as the BiLSTM-CRF baseline.
-
-### With mock ranked list (enables POST-RETRIEVAL)
-
-```bash
-python scripts/qpp_evaluate.py \
-    --benchmark pacific \
-    --mock_ranked_list \
-    --n_irrelevant 10 \
-    --score_key nqc \
-    --threshold_method best_f1
-```
-
-For each turn, builds a ranked list by BM25-scoring the turn's observations
-(relevant) plus 10 random observations from other conversations
-(irrelevant).  This enables WIG, NQC, SMV, sigma_max, n_sigma, clarity.
-
-### With T5 query rewriter
-
-```bash
-python scripts/qpp_evaluate.py \
-    --benchmark pacific \
-    --rewriter_path /models/t5-query-rewriter \
-    --score_key scs
-```
-
-Rewrites the query using a local T5 model before computing QPP features.
-## Example: per_turn = false:
-### Dataset: CLaQuA (last-turn only)
-
-```bash
-python scripts/qpp_evaluate.py \
-    --benchmark claqua \
-    --per_turn false \
-    --score_key scs \
-    --threshold_method otsu
-```
-
-## Example: Retrieval Augmented Generation (RAG) Conversation Assistant:
-### With pyserini index (if available)
-
-```bash
-python scripts/qpp_evaluate.py \
-    --benchmark pacific \
-    --index_path /path/to/lucene/index \
-    --score_key nqc
-```
-
----
-
 ## Thresholding methods
 
 | Method | Description |
@@ -231,68 +291,6 @@ python scripts/qpp_evaluate.py \
 
 For a fair comparison with BiLSTM-CRF, use `best_f1` which tunes on
 the train set (not test).
-
----
-
-## Output format
-
-Results are saved as JSON matching the BiLSTM-CRF evaluation format:
-
-```json
-{
-  "benchmark": "pacific",
-  "score_key": "avg_idf",
-  "threshold_method": "best_f1",
-  "threshold_used": 3.14,
-  "metrics": {
-    "accuracy": 0.72,
-    "precision": 0.68,
-    "recall": 0.71,
-    "f1": 0.69,
-    "auc_roc": 0.74
-  },
-  "per_measure_sweep": {
-    "avg_idf":  {"f1_weighted": 0.69, "f1_macro": 0.58, ...},
-    "scs":      {"f1_weighted": 0.71, "f1_macro": 0.60, ...},
-    "nqc":      {"f1_weighted": 0.65, "f1_macro": 0.55, ...}
-  }
-}
-```
-
-Per-turn diagnostics are saved separately with all QPP features:
-
-```json
-{
-  "turn_index": 3,
-  "query": "What is the interest rate for...",
-  "prediction": 1,
-  "prediction_label": "ambiguous",
-  "ground_truth": 1,
-  "ground_truth_label": "ambiguous",
-  "correct": true,
-  "qpp_score": 2.31,
-  "qpp_features": {
-    "query_length": 6.0,
-    "avg_idf": 2.31,
-    "scs": 4.52,
-    "wig": 1.23,
-    "nqc": 0.87
-  }
-}
-```
-
----
-
-## Function reference
-
-| Function / Class | File | Purpose |
-|---|---|---|
-| `PseudoCollection` | qpp_measures.py | Indexes observation texts. Provides `idf(t)`, `collection_prob(t)`, `scq(t)`, `bm25_score()`, `get_random_doc()`. |
-| `QPPScorer` | qpp_measures.py | Computes all QPP features for a query. `score_turn()` returns a dict of all applicable measures. |
-| `parse_sip_for_qpp()` | qpp_measures.py | Parses SIP conversation into per-turn records with query, observations, and label separated. |
-| `threshold_classify()` | qpp_measures.py | Converts QPP score array to binary predictions via percentile, fixed, or Otsu thresholding. |
-| `find_best_threshold()` | qpp_measures.py | Grid-searches for the threshold maximizing macro-F1 on labeled data. |
-| `qpp_evaluate.py` | scripts/ | End-to-end evaluation script. Builds collection, scores all turns, thresholds, evaluates, sweeps all measures. |
 
 ---
 
