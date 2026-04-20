@@ -81,7 +81,7 @@ python scripts/qpp_evaluate.py \
 
 ## Output format
 
-Results are saved as JSON matching the BiLSTM-CRF evaluation format:
+Results are saved as JSON for comprehensive evaluation format:
 
 ```json
 {
