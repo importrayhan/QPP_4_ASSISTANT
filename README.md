@@ -28,7 +28,7 @@ python scripts/qpp_evaluate.py \
     --threshold_method best_f1
 ```
 
-This computes all Tier 1+2 measures for every system turn, finds the
+This computes pre-retrieval QPP measures for every system turn, finds the
 optimal threshold on the train set, applies it to the test set, and
 reports the same metrics as the BiLSTM-CRF baseline.
 
@@ -143,23 +143,24 @@ Per-turn diagnostics are saved separately with all QPP features:
 ## How it works
 
 ```
-                         ┌──────────────────────────┐
+                         ┌─────────────────────────┐
                          │  All observation texts   │
                          │  across the dataset      │
-                         └────────┬─────────────────┘
+                         └────────┬────────────────┘
                                   ▼
-                         ┌──────────────────────────┐
+                         ┌─────────────────────────┐
                          │  PseudoCollection        │
                          │  • N documents           │
                          │  • df(term) per term     │
                          │  • cf(term) per term     │
                          │  • total_tokens          │
-                         └────────┬─────────────────┘
+                         └────────┬────────────────┘
                                   │
        ┌──────────────────────────┼──────────────────────────┐
        │                          │                          │
        ▼                          ▼                          ▼
   ┌──────────┐          ┌──────────────────┐        ┌──────────────┐
+  │  Tier 1  │          │     Tier 2       │        │    Tier 3    │
   │  Query   │          │  Query + IDF/CF  │        │ Ranked list  │
   │  only    │          │  from collection │        │ with scores  │
   ├──────────┤          ├──────────────────┤        ├──────────────┤
@@ -179,16 +180,16 @@ Per-turn diagnostics are saved separately with all QPP features:
                      │  per system turn    │
                      └────────┬────────────┘
                               ▼
-                     ┌──────────────────────┐
+                     ┌─────────────────────┐
                      │  Threshold           │
                      │  score < t → ambig.  │
                      │  score ≥ t → clear   │
-                     └────────┬─────────────┘
+                     └────────┬────────────┘
                               ▼
-                     ┌──────────────────────┐
+                     ┌─────────────────────┐
                      │  Binary prediction   │
                      │  + confidence        │
-                     └──────────────────────┘
+                     └─────────────────────┘
 ```
 
 ---
