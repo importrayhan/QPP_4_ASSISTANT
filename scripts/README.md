@@ -331,7 +331,7 @@ that appears in many observations may have artificially high df,
 deflating its IDF.  Conversely, terms from a specific domain may be
 rare in observations but common in the actual document collection.
 
-Mitigation: use --mock_ranked_list to enable Tier 3 measures (WIG, NQC,
+Mitigation: use --mock_ranked_list to enable post-retrieval measures (WIG, NQC,
 sigma_max) which measure score distributions rather than raw term
 statistics.  These are more robust to collection mismatch because they
 operate on relative scores.
