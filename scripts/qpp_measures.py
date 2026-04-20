@@ -190,7 +190,7 @@ class PseudoCollection:
 # ══════════════════════════════════════════════════════════════════════════════
 def parse_sip_for_qpp(raw: Dict, num_classes: int = 2) -> List[Dict]:
     """Parse a SIP conversation into per-turn QPP records."""
-    from convqa_eval.data.loader import remap_label
+    from data.loader import remap_label
     convs = raw.get("conversations", raw.get("turns", []))
     records, i, turn_idx = [], 0, 0
     while i < len(convs):
