@@ -141,7 +141,7 @@ Per-turn diagnostics are saved separately with all QPP features:
 | `qpp_evaluate.py` | scripts/ | End-to-end evaluation script. Builds collection, scores all turns, thresholds, evaluates, sweeps all measures. |
 
 ---
-## How the QPP engine works
+## How the QPP engine works (specially when a collection index is not available, it generates a pseudo-collection from conversation history)
 ![Workflow](https://github.com/importrayhan/QPP_4_ASSISTANT/blob/main/scripts/categories.png?raw=true)
 
 ---
