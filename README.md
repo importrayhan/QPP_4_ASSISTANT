@@ -1,6 +1,6 @@
 <h2 align="center">🔬 QPP for (🤖 Conversational) ASSISTANT</h2>
 
-![alt text](https://github.com/importrayhan/QPP_4_ASSISTANT/blob/main/convir_qpp.png?raw=true)
+![Sci-Fi Banner Image](https://github.com/importrayhan/QPP_4_ASSISTANT/blob/main/convir_qpp.png?raw=true)
 # QPP Heuristic Baseline
 
 Query Performance Prediction (QPP) as an unsupervised baseline for
@@ -11,9 +11,6 @@ harder to satisfy with retrieved information. The retrieval signal is
 weaker, term specificity is lower, and the retrieved documents are less
 coherent.
 
-This baseline requires **no training**. It computes statistical features
-from query text and a pseudo-collection built from observation fields,
-then thresholds to classify.
 <div align="center">
   <img src="https://readme-typing-svg.herokuapp.com?font=Roboto&size=29&duration=3000&pause=800&color=F7F7F7&background=003F7BBD&multiline=true&width=1028&height=480&lines=%3C%7C+Multi-Turn+History+%7C%3E++%2B++%3C%7C+Relevant+Document+%7C%3E;User%3A+What+percentage+of+total+non-marketable+investments+were+that+in+2019%3F;Query+Entropy+(QPP)+%3A+9.8817;Prediction_label%3A+%22clear%22;%22Ground_truth%22%3A+%22clear%22;User%3A+What+was+the+total+accumulated+amortization%3F;Query+Entropy+(QPP)+%3A+3.9691;Prediction_label%3A+%22ambiguous%22;%22Ground_truth%22%3A+%22ambiguous%22" alt="Typing SVG" />
 </div>
@@ -128,6 +125,7 @@ Per-turn diagnostics are saved separately with all QPP features:
   }
 }
 ```
+![Terminal Screenshot](https://github.com/importrayhan/QPP_4_ASSISTANT/blob/main/scripts/terminal.png?raw=true)
 
 ---
 
