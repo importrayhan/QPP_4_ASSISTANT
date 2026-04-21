@@ -19,12 +19,7 @@ rare and therefore informative.  An ambiguous query tends to use common
 terms (low IDF) that match many documents equally, making it hard for the
 system to distinguish relevant from irrelevant.
 
-Reference: Narabzad's implementation uses `math.log(N/df)` with natural
-log.  He & Ounis specify log₂.  QPP4CS uses pyserini's IndexReader which
-computes `ln(1 + (N - df + 0.5)/(df + 0.5))` (BM25 IDF variant).  Our
-implementation uses `log₂(N/df)` matching the original paper.  The choice
-of log base affects scale but not ranking — all produce identical query
-orderings.
+Reference: Our implementation uses `log₂(N/df)` matching the original paper. 
 
 **MaxIDF** — same formula, takes max instead of mean.  Captures the single
 most discriminative term.  More robust to queries mixing one rare term with
@@ -53,9 +48,6 @@ AND specific enough to be discriminative.  Three aggregations (Avg, Max,
 Sum) capture different aspects: AvgSCQ is the mean signal per term,
 MaxSCQ is the peak signal, SumSCQ rewards queries with many informative
 terms.
-
-Reference: Narabzad's implementation matches exactly.  QPP4CS pre-retrieval
-module computes SCQ identically.
 
 **VAR** (term frequency variance, He & Ounis 2008)
 
