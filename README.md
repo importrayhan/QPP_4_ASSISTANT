@@ -14,7 +14,7 @@ coherent.
 <div align="center">
   <img src="https://readme-typing-svg.herokuapp.com?font=Roboto&size=29&duration=3000&pause=800&color=F7F7F7&background=003F7BBD&multiline=true&width=1028&height=480&lines=%3C%7C+Relevant+Document+%7C%3E;User%3A+What+percentage+of+total+non-marketable+investments+were+that+in+2019%3F;Query+Entropy+(QPP)+%3A+9.8817;Prediction_label%3A+%22clear%22;%22Ground_truth%22%3A+%22clear%22;User%3A+What+was+the+total+accumulated+amortization%3F;Query+Entropy+(QPP)+%3A+3.9691;Prediction_label%3A+%22ambiguous%22;%22Ground_truth%22%3A+%22ambiguous%22" alt="Typing SVG" />
 </div>
----
+
 
 ## Usage
 
@@ -141,56 +141,8 @@ Per-turn diagnostics are saved separately with all QPP features:
 | `qpp_evaluate.py` | scripts/ | End-to-end evaluation script. Builds collection, scores all turns, thresholds, evaluates, sweeps all measures. |
 
 ---
-## How it works
-
-```
-                         ┌─────────────────────────┐
-                         │  All observation texts   │
-                         │  across the dataset      │
-                         └────────┬────────────────┘
-                                  ▼
-                         ┌─────────────────────────┐
-                         │  PseudoCollection        │
-                         │  • N documents           │
-                         │  • df(term) per term     │
-                         │  • cf(term) per term     │
-                         │  • total_tokens          │
-                         └────────┬────────────────┘
-                                  │
-       ┌──────────────────────────┼──────────────────────────┐
-       │                          │                          │
-       ▼                          ▼                          ▼
-  ┌──────────┐          ┌──────────────────┐        ┌──────────────┐
-  │  Query   │          │  Query + IDF/CF  │        │ Ranked list  │
-  │  only    │          │  from collection │        │ with scores  │
-  ├──────────┤          ├──────────────────┤        ├──────────────┤
-  │ q_length │          │ avg_idf          │        │ wig          │
-  │ q_entropy│          │ max_idf          │        │ nqc          │
-  │          │          │ avg_scq          │        │ smv          │
-  │          │          │ max_scq          │        │ sigma_max    │
-  │          │          │ sum_scq          │        │ n_sigma      │
-  │          │          │ scs (clarity)    │        │ clarity      │
-  │          │          │ query_scope      │        │              │
-  └────┬─────┘          └───────┬──────────┘        └──────┬───────┘
-       │                        │                          │
-       └────────────────────────┼──────────────────────────┘
-                                ▼
-                     ┌─────────────────────┐
-                     │  QPP score (float)  │
-                     │  per system turn    │
-                     └────────┬────────────┘
-                              ▼
-                     ┌─────────────────────┐
-                     │  Threshold           │
-                     │  score < t → ambig.  │
-                     │  score ≥ t → clear   │
-                     └────────┬────────────┘
-                              ▼
-                     ┌─────────────────────┐
-                     │  Binary prediction   │
-                     │  + confidence        │
-                     └─────────────────────┘
-```
+## How the QPP engine works
+![Workflow](https://github.com/importrayhan/QPP_4_ASSISTANT/blob/main/scripts/categories.png?raw=true)
 
 ---
 
