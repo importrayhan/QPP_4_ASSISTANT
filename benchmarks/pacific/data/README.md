@@ -26,7 +26,7 @@ List of Conversations [
       {
         "from": "human | function_call | observation | gpt",
         "value": "...",
-        "ambiguous_type": "...",
+        "ambiguous_type": "0 | 1 | 2(opt.) | 3(opt.)",
         "metadata": { ... }
       }
     ],
