@@ -254,7 +254,7 @@ Turn 2: query=u₂  observations=[obs₂]  label=gpt₂.ambiguous_type
 → 3 QPP scores, 3 predictions, 3 labels compared
 ```
 
-Each turn is scored independently.  The mock ranked list for turn k uses
+Even when a query rewriter path is provided, each rewritten turn is scored independently.  The mock ranked list for turn k uses
 obs_k as relevant documents and random observations from other
 conversations as irrelevant documents.  Context queries [u₀, ..., u_{k-1}]
 are used for the query_drift feature.
