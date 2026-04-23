@@ -1,10 +1,10 @@
-<h2 align="center">🔬 QPP for (🤖 Conversational) ASSISTANT</h2>
+<h2 align="center">🔬 QPP for (🤖Conversational) ASSISTANT</h2>
 
 ![Sci-Fi Banner Image](https://github.com/importrayhan/QPP_4_ASSISTANT/blob/main/convir_qpp.png?raw=true)
 # QPP Heuristic Baseline
 
-Query Performance Prediction (QPP) as an unsupervised baseline for
-conversational turn ambiguity classification.
+Query Performance Prediction (QPP) as an unsupervised baseline for scoring
+conversational search system effectiveness followed by ambiguous turn classification.
 
 **Hypothesis**: ambiguous queries have lower QPP scores because they are
 harder to satisfy with retrieved information. The retrieval signal is
