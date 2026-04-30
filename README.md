@@ -1,4 +1,4 @@
-<h2 align="center">🔬 QPP for (🤖Conversational) ASSISTANT</h2>
+<h2 align="center">🔬 QPP for (🤖Conversational) Assistant</h2>
 
 ![Sci-Fi Banner Image](https://github.com/importrayhan/QPP_4_ASSISTANT/blob/main/convir_qpp.png?raw=true)
 # QPP Heuristic Baseline
@@ -30,7 +30,7 @@ python scripts/qpp_evaluate.py \
 
 This computes pre-retrieval QPP measures for every system turn, finds the
 optimal threshold on the train set, applies it to the test set, and
-reports the same metrics as the BiLSTM-CRF baseline.
+reports the classification metrics.
 
 ### With mock ranked list (enables POST-RETRIEVAL)
 
