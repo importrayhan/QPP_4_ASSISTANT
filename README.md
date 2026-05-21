@@ -250,8 +250,11 @@ the train set (not test).
 ## References
 
 - Cronen-Townsend et al., "Predicting Query Performance", SIGIR 2002 (Clarity Score)
-- He & Ounis, "Inferring Query Performance Using Pre-retrieval Predictors", SPIRE 2004 (AvgIDF, SCQ)
-- Zhou & Croft, "Query Performance Prediction in Web Search Environments", SIGIR 2007 (WIG)
-- Shtok et al., "Predicting Query Performance by Query-Drift Estimation", TOIS 2012 (NQC)
 - Cummins, "Improved Query Performance Prediction Using Standard Deviation", SIGIR 2014 (σ_max)
+- He & Ounis, "Inferring Query Performance Using Pre-retrieval Predictors", SPIRE 2004 (AvgIDF, SCQ)
+- Md Zia Ullah et al., Query Performance Prediction Focused on Summarized Letor Features, The 41st International ACM SIGIR Conference on Research and Development in Information Retrieval (SIGIR), 2018.
+- Md Zia Ullah et al., Query Performance Prediction and Effectiveness Evaluation Without Relevance Judgments: Two Sides of the Same Coin, The 41st International ACM SIGIR Conference on Research and Development in Information Retrieval (SIGIR)), 2018.
+- Md Zia Ullah et al., Forward and backward feature selection for query performance prediction, The 35th ACM/SIGAPP Symposium On Applied Computing (SAC), 2020.
 - Meng et al., "Query Performance Prediction: From Ad-hoc to Conversational Search", SIGIR 2023 (QPP4CS)
+- Shtok et al., "Predicting Query Performance by Query-Drift Estimation", TOIS 2012 (NQC)
+- Zhou & Croft, "Query Performance Prediction in Web Search Environments", SIGIR 2007 (WIG)
